@@ -21,7 +21,29 @@ public class BinomialHeap
 	 */
 	public HeapItem insert(int key, String info) 
 	{    
-		return; // should be replaced by student code
+		BinomialHeap bh = new BinomialHeap();
+		HeapNode hn = new HeapNode();
+		HeapItem hi = new HeapItem();
+		
+		hn.item = hi;
+		hn.child = null;
+		hn.next = hn;
+		hn.parent = null;
+		hn.rank = 0;
+		
+		hi.key = key;
+		hi.info = info;
+		hi.node = hn;
+		
+		bh.min = hn;
+		bh.last = hn;
+		bh.numTrees = 1;
+		bh.size = 1;
+		
+		this.meld(bh);
+		
+		return hi;
+		
 	}
 
 	/**
@@ -77,12 +99,23 @@ public class BinomialHeap
 	 */
 	public void meld(BinomialHeap heap2)
 	{
+		if(this.size == 0 && heap2.size == 0) {
+			return;
+		}
+		if(this.size == 0) {
+			this.min = heap2.min;
+			this.size = heap2.size;
+			this.numTrees = heap2.numTrees;
+			this.last = heap2.last;
+			return;
+		}
 		if(heap2.size == 0) {
 			return;
 		}
 
 		int loopSize = Math.max(this.numTrees, heap2.numTrees) + 1;
-		HeapNode carry = null;
+		HeapNode [] carrys = new HeapNode[loopSize+1];
+
 		HeapNode prev = this.last;
 		//////////////////////////////////////////////////
 		// need to handle the case when this is an empty heap
@@ -90,65 +123,82 @@ public class BinomialHeap
 		HeapNode minRank2 = heap2.last.next;
 		
 		for(int i = 0; i < loopSize; i++) {
-			if(minRank1.rank != i) {
-				if(minRank2.rank != i) { // heap2 does not have a tree with rank i
-					if(carry == null) { // no carry - only heap1
+			if(minRank1 == null || minRank1.rank != i) {
+				if(minRank2 == null || minRank2.rank != i) { // heap2 does not have a tree with rank i
+					if(carrys[i] == null) { // no carry - only heap1
 						continue;
 					}
 					else { // 
-						carry.next = minRank1;
-						prev.next = carry;
+						carrys[i].next = minRank1 != null ? minRank1 : this.min;
+						prev.next = carrys[i];
 						numTrees++;
 						size += Math.pow(2, i);
-						carry = null;
+						if(this.last == null || carrys[i].rank > this.last.rank) {
+							this.last = carrys[i];
+						}
+						if(this.min == null || carrys[i].item.key < this.min.item.key) {
+							this.min = carrys[i];
+						}					
 					}
 				}
 				else { // heap1 does not have, heap2 has
-					if(carry == null) {
+					if(carrys[i] == null) {
 						minRank2.next = prev.next;
 						prev.next = minRank2;
 						size += Math.pow(2, i);
 						numTrees++;
+						if(this.last == null || minRank2.rank > this.last.rank) {
+							this.last = minRank2;
+						}
+						if(this.min == null || minRank2.item.key < this.min.item.key) {
+							this.min = minRank2;
+						}	
 					}
 					else {
-						carry = Link(carry, minRank2);
+						carrys[i+1] = Link(carrys[i], minRank2);
 					}
 				}
 			}
 			else {
-				if(minRank2.rank != i) { // heap2 does not have a tree with rank i
-					if(carry == null) { // no carry - only heap1
+				if(minRank2 == null || minRank2.rank != i) { // heap2 does not have a tree with rank i
+					if(carrys[i] == null) { // no carry - only heap1
 						continue;
 					}
 					else { // 
-						carry = Link(minRank1,carry);
+						carrys[i+1] = Link(minRank1,carrys[i]);
 						prev.next = minRank1.next;
 						size -= Math.pow(2, i);
 						numTrees--;
+						if(size == 0) {
+							this.min = carrys[i+1];
+							this.last = carrys[i+1];
+							minRank1 = null;
+						}
 					}
 				}
 				else { // heap2 has
-					if(carry == null) {
-						carry = Link(minRank1,minRank2);
+					if(carrys[i] == null) {
+						carrys[i+1] = Link(minRank1,minRank2);
 						prev.next = minRank1.next;
 						size -= Math.pow(2, i);
 						numTrees--;
+						if(size == 0) {
+							this.min = carrys[i+1];
+							this.last = carrys[i+1];
+							minRank1 = null;
+						}
 					}
 					else {
-						carry = Link(carry, minRank2);
+						carrys[i+1] = Link(carrys[i], minRank2);
 					}
 				}
 			}
 			
-			
-			
-			
-			
-			
-			if(minRank1.rank == i) {
+			if(minRank1 != null && minRank1.rank == i) {
 				minRank1 = minRank1.next;
+				prev = prev.next;
 			}
-			if(minRank2.rank == i) {
+			if(minRank2 != null && minRank2.rank == i) {
 				minRank2 = minRank2.next;
 			}
 			
@@ -218,14 +268,32 @@ public class BinomialHeap
 	 * @return
 	 */
 	public static HeapNode Link(HeapNode tree1, HeapNode tree2) {
+		if(tree1.rank == 0) {// also tree2.rank == 0
+			if(tree1.item.key < tree2.item.key) {
+				tree1.child = tree2;
+				tree2.parent = tree1;
+				tree1.rank++;
+				return tree1;
+			}
+			else {
+				tree2.child = tree1;
+				tree1.parent = tree2;
+				tree2.rank++;
+				return tree2;
+			}
+		}
 		if(tree1.item.key < tree2.item.key) {
 			tree2.next = tree1.child.next;
 			tree1.child = tree2;
+			tree2.parent = tree1;
+			tree1.rank++;
 			return tree1;
 		}
 		else {
 			tree1.next = tree2.child.next;
 			tree2.child = tree1;
+			tree1.parent = tree2;
+			tree2.rank++;
 			return tree2;
 		}
 	}

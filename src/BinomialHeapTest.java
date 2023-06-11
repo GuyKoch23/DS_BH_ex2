@@ -10,10 +10,14 @@ import org.junit.Assert;
 class BinomialHeapTest {
 
 	BinomialHeap bh;
+	BinomialHeap bh1;
+	BinomialHeap bh2;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		bh = new BinomialHeap();
+		bh1 = new BinomialHeap();
+		bh2 = new BinomialHeap();
 	}
 
 	@Test
@@ -31,11 +35,58 @@ class BinomialHeapTest {
 		Assert.assertEquals(null, bh.findMin());
 	}
 	
+	@Test
+	void insert_first_to_empty_bh() {
+		bh.insert(1, "Please Word");
+		Assert.assertEquals(1, bh.findMin().key);
+		Assert.assertEquals(1, bh.last.item.key);
+		Assert.assertEquals(1, bh.size);
+		Assert.assertEquals(1, bh.numTrees);
+	}
+	
+	@Test
+	void insert_2_to_1_bh() {
+		bh.insert(1, "Please Word");
+		bh.insert(2, "Please Word again");
+		Assert.assertEquals(1, bh.findMin().key);
+	}
+	
+	@Test
+	void insert_two_to_one_bh() {
+		
+		//BinomialHeap bh1 = new BinomialHeap();;
+
+		bh1.insert(2, "Please Word");
+		bh1.insert(3, "Please Word again");
+		bh1.insert(1, "Please Word again");
+
+		Assert.assertEquals(1, bh1.findMin().key);
+		Assert.assertEquals(2, bh1.last.item.key);
+		Assert.assertEquals(2, bh1.findMin().node.next.item.key);
+		Assert.assertEquals(3, bh1.last.child.item.key);
+		Assert.assertEquals(1, bh1.last.next.item.key);
+	}
 	
 	
-	
-	
-	
+	@Test
+	void insert_two_to_two_bh() {
+		
+		//BinomialHeap bh1 = new BinomialHeap();;
+		//BinomialHeap bh2 = new BinomialHeap();;
+
+		bh1.insert(1, "Please Word");
+		bh1.insert(3, "Please Word again");
+		bh2.insert(4, "Please Word again");
+		bh2.insert(6, "Please Word again");
+		
+		bh1.meld(bh2);
+
+		Assert.assertEquals(1, bh1.findMin().key);
+		Assert.assertEquals(1, bh1.last.item.key);
+		//Assert.assertEquals(2, bh1.findMin().node.rank);
+		Assert.assertEquals(4, bh1.findMin().node.child.item.key);
+		//Assert.assertEquals(0, bh1.findMin().node.child.next.rank);
+	}
 	
 	
 	
