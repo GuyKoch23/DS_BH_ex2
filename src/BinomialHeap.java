@@ -113,6 +113,7 @@ public class BinomialHeap
 	 */
 	public void meld(BinomialHeap heap2)
 	{
+		//Handle empty heap cases.
 		if(this.size == 0 && heap2.size == 0) {
 			return;
 		}
@@ -127,6 +128,7 @@ public class BinomialHeap
 			return;
 		}
 
+		// Initialize pointers
 		int newSize = 0;
 		int newTreeNum = 0;
 		int loopSize = Math.max(this.last.rank, heap2.last.rank) + 2;
@@ -138,6 +140,7 @@ public class BinomialHeap
 		
 		for(int i = 0; i < loopSize; i++) {
 			HeapNode next1 = cur1;
+			// Check if this heap has a tree with rank i to add to the sum array
 			if (cur1!=null && cur1.rank == i) {
 				ins2arr3(sum, cur1);
 				next1 = cur1.next;
@@ -145,6 +148,7 @@ public class BinomialHeap
 					next1=null;
 				}
 			}
+			// Check if this heap has a tree with rank i to add to the sum array
 			HeapNode next2 = cur2;
 			if (cur2!=null && cur2.rank ==i) {
 				ins2arr3(sum, cur2);
@@ -153,18 +157,22 @@ public class BinomialHeap
 					next2=null;
 				}
 			}
+			// Add the carry to the sum array (if it null nothing will change)
 			ins2arr3(sum, carry);
 			
 			// Handle the summation
 			HeapNode toInsert = null;
 			carry = null;
 			
+			// 3 trees need to sum, last one will be the tree at rank i to enter the heap.
 			if (sum[2] != null) {
 				toInsert = sum[2];
 			}
+			// 3 or 2 trees need to sum. first 2 are the carry
 			if (sum[1] != null) {
 				carry = Link(sum[0], sum[1]);
 			}
+			// 0 or 1 trees needs to sum. if there is 1 it will be the tree at rank i to enter the heap.
 			else {
 				toInsert = sum[0];
 			}
@@ -181,8 +189,12 @@ public class BinomialHeap
 						this.min = toInsert;
 					}	
 				}
+				// handle the bad case when this heap was only 1 tree.
 				else {
+					// We think we will get here iff Both heaps have 1 tree with the same rank
+					assert(cur1==null && cur2==null);
 					this.last = toInsert;
+					toInsert.next = toInsert;
 					if (this.min.item.key >= toInsert.item.key) {
 						this.min = toInsert;
 					}
@@ -193,9 +205,9 @@ public class BinomialHeap
 			cur2 = next2;
 			sum = new HeapNode[3]; 
 		}
+		
 		this.size = newSize;
 		this.numTrees = newTreeNum;
-		
 	}
 	
 	/**
