@@ -9,8 +9,26 @@ public class BinomialHeap
 	public int size;
 	public HeapNode last;
 	public HeapNode min;
-	
 	public int numTrees;
+	
+	private void switchHeaps(BinomialHeap heap2)
+	{
+		int temp = this.size;
+		this.size = heap2.size;
+		heap2.size = temp;
+		
+		temp = this.numTrees;
+		this.numTrees = heap2.numTrees;
+		heap2.numTrees = temp;
+		
+		HeapNode temp2 = this.last;
+		this.last = heap2.last;
+		heap2.last = temp2;
+		
+		temp2 = this.min;
+		this.min = heap2.min;
+		heap2.min = temp2;
+	}
 
 	/**
 	 * 
@@ -106,6 +124,9 @@ public class BinomialHeap
 		assert(false);
 	}
 	
+	
+
+	
 	/**
 	 * 
 	 * Meld the heap with heap2
@@ -126,6 +147,19 @@ public class BinomialHeap
 		}
 		if(heap2.size == 0) {
 			return;
+		}
+		
+		// Switch case 1 (this.numTress==1 and heap2.numTrees>1);
+		// Switch case 2 (both are size 1, rank of this tree is smaller)
+		if (this.numTrees==1) {
+			if (heap2.numTrees>1) {
+				this.switchHeaps(heap2);
+			} else {
+				// heap2 has 1 tree
+				if (heap2.last.rank > this.last.rank) {
+					this.switchHeaps(heap2);
+				}
+			}
 		}
 
 		// Initialize pointers
@@ -192,7 +226,7 @@ public class BinomialHeap
 				// handle the bad case when this heap was only 1 tree.
 				else {
 					// We think we will get here iff Both heaps have 1 tree with the same rank
-					assert(cur1==null && cur2==null);
+					assert(cur1==null && cur2==null && carry == null);
 					this.last = toInsert;
 					toInsert.next = toInsert;
 					if (this.min.item.key >= toInsert.item.key) {
@@ -210,118 +244,7 @@ public class BinomialHeap
 		this.numTrees = newTreeNum;
 	}
 	
-	/**
-	 * 
-	 * Meld the heap with heap2
-	 *
-	 */
-	public void meld2(BinomialHeap heap2)
-	{
-		if(this.size == 0 && heap2.size == 0) {
-			return;
-		}
-		if(this.size == 0) {
-			this.min = heap2.min;
-			this.size = heap2.size;
-			this.numTrees = heap2.numTrees;
-			this.last = heap2.last;
-			return;
-		}
-		if(heap2.size == 0) {
-			return;
-		}
 
-		int loopSize = Math.max(this.numTrees, heap2.numTrees) + 1;
-		HeapNode [] carrys = new HeapNode[loopSize+1];
-
-		HeapNode prev = this.last;
-		//////////////////////////////////////////////////
-		// need to handle the case when this is an empty heap
-		HeapNode minRank1 = this.last.next; 
-		HeapNode minRank2 = heap2.last.next;
-		
-		for(int i = 0; i < loopSize; i++) {
-			if(minRank1 == null || minRank1.rank != i) {
-				if(minRank2 == null || minRank2.rank != i) { // heap2 does not have a tree with rank i
-					if(carrys[i] == null) { // no carry - only heap1
-						continue;
-					}
-					else { // 
-						carrys[i].next = minRank1 != null ? minRank1 : this.min;
-						prev.next = carrys[i];
-						numTrees++;
-						size += Math.pow(2, i);
-						if(this.last == null || carrys[i].rank > this.last.rank) {
-							this.last = carrys[i];
-						}
-						if(this.min == null || carrys[i].item.key < this.min.item.key) {
-							this.min = carrys[i];
-						}					
-					}
-				}
-				else { // heap1 does not have, heap2 has
-					if(carrys[i] == null) {
-						minRank2.next = prev.next;
-						prev.next = minRank2;
-						size += Math.pow(2, i);
-						numTrees++;
-						if(this.last == null || minRank2.rank > this.last.rank) {
-							this.last = minRank2;
-						}
-						if(this.min == null || minRank2.item.key < this.min.item.key) {
-							this.min = minRank2;
-						}	
-					}
-					else {
-						carrys[i+1] = Link(carrys[i], minRank2);
-					}
-				}
-			}
-			else {
-				if(minRank2 == null || minRank2.rank != i) { // heap2 does not have a tree with rank i
-					if(carrys[i] == null) { // no carry - only heap1
-						continue;
-					}
-					else { // 
-						carrys[i+1] = Link(minRank1,carrys[i]);
-						prev.next = minRank1.next;
-						size -= Math.pow(2, i);
-						numTrees--;
-						if(size == 0) {
-							this.min = carrys[i+1];
-							this.last = carrys[i+1];
-							minRank1 = null;
-						}
-					}
-				}
-				else { // heap2 has
-					if(carrys[i] == null) {
-						carrys[i+1] = Link(minRank1,minRank2);
-						prev.next = minRank1.next;
-						size -= Math.pow(2, i);
-						numTrees--;
-						if(size == 0) {
-							this.min = carrys[i+1];
-							this.last = carrys[i+1];
-							minRank1 = null;
-						}
-					}
-					else {
-						carrys[i+1] = Link(carrys[i], minRank2);
-					}
-				}
-			}
-			
-			if(minRank1 != null && minRank1.rank == i) {
-				minRank1 = minRank1.next;
-				prev = prev.next;
-			}
-			if(minRank2 != null && minRank2.rank == i) {
-				minRank2 = minRank2.next;
-			}
-			
-		}
-	}
 
 	/**
 	 * 
