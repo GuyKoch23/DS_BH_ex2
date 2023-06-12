@@ -92,12 +92,118 @@ public class BinomialHeap
 		return; // should be replaced by student code
 	}
 
+	private void ins2arr3(HeapNode[] arr, HeapNode n)
+	{
+		assert(arr.length==3);
+		for(int i=0; i<arr.length; i++)
+		{
+			if (arr[i] == null) {
+				arr[i] = n;
+				return;
+			}
+		}
+		
+		assert(false);
+	}
+	
 	/**
 	 * 
 	 * Meld the heap with heap2
 	 *
 	 */
 	public void meld(BinomialHeap heap2)
+	{
+		if(this.size == 0 && heap2.size == 0) {
+			return;
+		}
+		if(this.size == 0) {
+			this.min = heap2.min;
+			this.size = heap2.size;
+			this.numTrees = heap2.numTrees;
+			this.last = heap2.last;
+			return;
+		}
+		if(heap2.size == 0) {
+			return;
+		}
+
+		int newSize = 0;
+		int newTreeNum = 0;
+		int loopSize = Math.max(this.last.rank, heap2.last.rank) + 2;
+		HeapNode carry = null;
+		HeapNode prev = this.last;	
+		HeapNode cur1 = this.last.next; 
+		HeapNode cur2 = heap2.last.next;
+		HeapNode[] sum = new HeapNode[3];
+		
+		for(int i = 0; i < loopSize; i++) {
+			HeapNode next1 = cur1;
+			if (cur1!=null && cur1.rank == i) {
+				ins2arr3(sum, cur1);
+				next1 = cur1.next;
+				if (next1 == cur1) {
+					next1=null;
+				}
+			}
+			HeapNode next2 = cur2;
+			if (cur2!=null && cur2.rank ==i) {
+				ins2arr3(sum, cur2);
+				next2 = cur2.next;
+				if (next2 == cur2) {
+					next2=null;
+				}
+			}
+			ins2arr3(sum, carry);
+			
+			// Handle the summation
+			HeapNode toInsert = null;
+			carry = null;
+			
+			if (sum[2] != null) {
+				toInsert = sum[2];
+			}
+			if (sum[1] != null) {
+				carry = Link(sum[0], sum[1]);
+			}
+			else {
+				toInsert = sum[0];
+			}
+			
+			if(toInsert != null) {
+				newSize += Math.pow(2, i);
+				newTreeNum++;
+				if (next1!=null) {
+					prev.next = toInsert;
+					toInsert.next = next1;
+					prev = toInsert;
+					this.last = toInsert;
+					if (this.min.item.key >= toInsert.item.key) {
+						this.min = toInsert;
+					}	
+				}
+				else {
+					this.last = toInsert;
+					if (this.min.item.key >= toInsert.item.key) {
+						this.min = toInsert;
+					}
+				}
+			}
+			
+			cur1 = next1;
+			cur2 = next2;
+			sum = new HeapNode[3]; 
+		}
+		this.size = newSize;
+		this.numTrees = newTreeNum;
+		
+	}
+	
+	/**
+	 * 
+	 * Meld the heap with heap2
+	 *
+	 */
+	public void meld2(BinomialHeap heap2)
 	{
 		if(this.size == 0 && heap2.size == 0) {
 			return;

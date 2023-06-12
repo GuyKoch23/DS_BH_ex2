@@ -12,12 +12,16 @@ class BinomialHeapTest {
 	BinomialHeap bh;
 	BinomialHeap bh1;
 	BinomialHeap bh2;
+	BinomialHeap bh3;
+	BinomialHeap bh4;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		bh = new BinomialHeap();
 		bh1 = new BinomialHeap();
 		bh2 = new BinomialHeap();
+		bh3 = new BinomialHeap();
+		bh4 = new BinomialHeap();
 	}
 
 	@Test
@@ -74,17 +78,17 @@ class BinomialHeapTest {
 		//BinomialHeap bh1 = new BinomialHeap();;
 		//BinomialHeap bh2 = new BinomialHeap();;
 
-		bh1.insert(1, "Please Word");
-		bh1.insert(3, "Please Word again");
-		bh2.insert(4, "Please Word again");
-		bh2.insert(6, "Please Word again");
+		bh3.insert(1, "Please Word");
+		bh3.insert(3, "Please Word again");
+		bh4.insert(4, "Please Word again");
+		bh4.insert(6, "Please Word again");
 		
-		bh1.meld(bh2);
+		bh3.meld(bh4);
 
-		Assert.assertEquals(1, bh1.findMin().key);
-		Assert.assertEquals(1, bh1.last.item.key);
+		Assert.assertEquals(1, bh3.findMin().key);
+		Assert.assertEquals(1, bh3.last.item.key);
 		//Assert.assertEquals(2, bh1.findMin().node.rank);
-		Assert.assertEquals(4, bh1.findMin().node.child.item.key);
+		Assert.assertEquals(4, bh3.findMin().node.child.item.key);
 		//Assert.assertEquals(0, bh1.findMin().node.child.next.rank);
 	}
 	
