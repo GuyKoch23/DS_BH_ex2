@@ -16,6 +16,8 @@ class BinomialHeapTest {
 	BinomialHeap bh4;
 	BinomialHeap bh5;
 	BinomialHeap bh6;
+	BinomialHeap bh7;
+	BinomialHeap bh8;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -26,6 +28,8 @@ class BinomialHeapTest {
 		bh4 = new BinomialHeap();
 		bh5 = new BinomialHeap();
 		bh6 = new BinomialHeap();
+		bh7 = new BinomialHeap();
+		bh8 = new BinomialHeap();
 	}
 
 	@Test
@@ -216,6 +220,72 @@ class BinomialHeapTest {
 		Assert.assertEquals(3, bh5.last.child.item.key);
 	 }
 	
+	
+	@Test
+	 void meld_1_with_21_heaps() {
+		 
+		bh5.insert(8, "hey");
+		bh5.insert(4, "hey");
+		bh5.insert(5, "hey");
+		
+		bh6.insert(7, "hey");
+		bh6.insert(9, "hey");
+		bh6.insert(1, "hey");
+		bh6.insert(2, "hey");
+		bh6.insert(3, "hey");
+		bh6.insert(6, "hey");
+		
+		bh5.meld(bh6);
+		
+		bh5.insert(11, "hey");
+		bh5.insert(16, "hey");
+		
+		
+		
+		
+		bh7.insert(28, "hey");
+		bh7.insert(24, "hey");
+		bh7.insert(25, "hey");
+		
+		bh8.insert(27, "hey");
+		bh8.insert(29, "hey");
+		bh8.insert(21, "hey");
+		bh8.insert(22, "hey");
+		bh8.insert(23, "hey");
+		bh8.insert(26, "hey");
+		
+		bh7.meld(bh8);
+		
+		bh7.insert(31, "hey");
+		bh7.insert(36, "hey");
+		
+		bh5.meld(bh7);
+
+		
+		Assert.assertEquals(22, bh5.size);
+		Assert.assertEquals(3, bh5.numTrees);
+		Assert.assertEquals(1, bh5.min.item.key);
+		Assert.assertEquals(16, bh5.last.next.item.key);
+		Assert.assertEquals(4, bh5.last.rank);
+		Assert.assertEquals(1, bh5.last.next.rank);
+		Assert.assertEquals(3, bh5.last.child.rank);
+		Assert.assertEquals(21, bh5.last.child.item.key);
+	 }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Test
 	void delete_min_from231() {
 		bh1.insert(2, "Please Word");
@@ -224,7 +294,6 @@ class BinomialHeapTest {
 		bh1.deleteMin();
 		Assert.assertEquals(2, bh1.findMin().key);
 	}
-	
 	
 	
 	

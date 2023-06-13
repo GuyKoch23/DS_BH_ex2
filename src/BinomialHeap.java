@@ -137,7 +137,16 @@ public class BinomialHeap
 	 */
 	public void decreaseKey(HeapItem item, int diff) 
 	{    
-		return; // should be replaced by student code
+		item.key -= diff;
+		if(item.node.parent == null) {
+			return;
+		}
+		int temp;
+		while(item.node.parent != null && item.node.parent.item.key > item.key) {
+			temp = item.key;
+			item.key = item.node.parent.item.key;
+			item.node.parent.item.key = temp;
+		}
 	}
 
 	/**
@@ -147,7 +156,8 @@ public class BinomialHeap
 	 */
 	public void delete(HeapItem item) 
 	{    
-		return; // should be replaced by student code
+		this.decreaseKey(item, item.key);
+		this.deleteMin();
 	}
 
 	private void ins2arr3(HeapNode[] arr, HeapNode n)
@@ -155,17 +165,13 @@ public class BinomialHeap
 		assert(arr.length==3);
 		for(int i=0; i<arr.length; i++)
 		{
-			if (arr[i] == null) {
+			if (arr[i].isVirtual) {
 				arr[i] = n;
 				return;
 			}
 		}
 		
-		assert(false);
 	}
-	
-	
-
 	
 	/**
 	 * 
@@ -174,114 +180,133 @@ public class BinomialHeap
 	 */
 	public void meld(BinomialHeap heap2)
 	{
+		
 		//Handle empty heap cases.
 		if(this.size == 0 && heap2.size == 0) {
 			return;
 		}
 		if(this.size == 0) {
-			this.min = heap2.min;
-			this.size = heap2.size;
-			this.numTrees = heap2.numTrees;
-			this.last = heap2.last;
+			this.switchHeaps(heap2);
 			return;
 		}
 		if(heap2.size == 0) {
 			return;
 		}
 		
-		// Switch case 1 (this.numTress==1 and heap2.numTrees>1);
-		// Switch case 2 (both are size 1, rank of this tree is smaller)
-		if (this.numTrees==1) {
-			if (heap2.numTrees>1) {
-				this.switchHeaps(heap2);
-			} else {
-				// heap2 has 1 tree
-				if (heap2.last.rank > this.last.rank) {
-					this.switchHeaps(heap2);
-				}
+		int arraysLength = Math.max(this.last.rank, heap2.last.rank) + 2;
+		HeapNode [] heap1Arr = new HeapNode[arraysLength];
+		HeapNode [] heap2Arr = new HeapNode [arraysLength];
+		HeapNode [] meldedHeapArr = new HeapNode[arraysLength];
+		HeapNode [] sum = new HeapNode[3];
+		HeapNode toInsert;
+		
+		sum[0] = new HeapNode();
+		sum[1] = new HeapNode();
+		sum[2] = new HeapNode();
+		
+		sum[0].isVirtual = true;
+		sum[1].isVirtual = true;
+		sum[2].isVirtual = true;
+		
+		HeapNode carry = new HeapNode();
+		carry.isVirtual = true;
+		
+		HeapNode cur1 = this.last.next;
+		HeapNode cur2 = heap2.last.next;
+		
+		for(int i = 0; i < arraysLength; i++) {
+			if(cur1.rank == i) {
+				heap1Arr[i] = cur1;
+				cur1 = cur1.next;
+			}
+			else {
+				HeapNode temp = new HeapNode();
+				temp.isVirtual = true;
+				temp.rank = i;
+				heap1Arr[i] = temp;
 			}
 		}
-
-		// Initialize pointers
-		int newSize = 0;
-		int newTreeNum = 0;
-		int loopSize = Math.max(this.last.rank, heap2.last.rank) + 2;
-		HeapNode carry = null;
-		HeapNode prev = this.last;	
-		HeapNode cur1 = this.last.next; 
-		HeapNode cur2 = heap2.last.next;
-		HeapNode[] sum = new HeapNode[3];
-		
-		for(int i = 0; i < loopSize; i++) {
-			HeapNode next1 = cur1;
-			// Check if this heap has a tree with rank i to add to the sum array
-			if (cur1!=null && cur1.rank == i) {
-				ins2arr3(sum, cur1);
-				next1 = cur1.next;
-				if (next1 == cur1) {
-					next1=null;
-				}
+		for(int i = 0; i < arraysLength; i++) {
+			if(cur2.rank == i) {
+				heap2Arr[i] = cur2;
+				cur2 = cur2.next;
 			}
-			// Check if this heap has a tree with rank i to add to the sum array
-			HeapNode next2 = cur2;
-			if (cur2!=null && cur2.rank ==i) {
-				ins2arr3(sum, cur2);
-				next2 = cur2.next;
-				if (next2 == cur2) {
-					next2=null;
-				}
+			else {
+				HeapNode temp = new HeapNode();
+				temp.isVirtual = true;
+				temp.rank = i;
+				heap2Arr[i] = temp;
 			}
-			// Add the carry to the sum array (if it null nothing will change)
-			ins2arr3(sum, carry);
+		}
+		for(int i = 0; i < arraysLength; i++) {
+			if(!heap1Arr[i].isVirtual) {
+				this.ins2arr3(sum, heap1Arr[i]);
+			}
+			if(!heap2Arr[i].isVirtual) {
+				this.ins2arr3(sum, heap2Arr[i]);
+			}
+			if(!carry.isVirtual) {
+				this.ins2arr3(sum, carry);
+			}
+			toInsert = new HeapNode();
+			carry = new HeapNode();
+			toInsert.isVirtual = true;
+			carry.isVirtual = true;
 			
-			// Handle the summation
-			HeapNode toInsert = null;
-			carry = null;
-			
-			// 3 trees need to sum, last one will be the tree at rank i to enter the heap.
-			if (sum[2] != null) {
+			if (!sum[2].isVirtual) {
 				toInsert = sum[2];
 			}
-			// 3 or 2 trees need to sum. first 2 are the carry
-			if (sum[1] != null) {
-				carry = Link(sum[0], sum[1]);
+			if(!sum[1].isVirtual) {
+				carry = Link(sum[0],sum[1]);
 			}
-			// 0 or 1 trees needs to sum. if there is 1 it will be the tree at rank i to enter the heap.
 			else {
 				toInsert = sum[0];
 			}
+			meldedHeapArr[i] = toInsert;
 			
-			if(toInsert != null) {
-				newSize += Math.pow(2, i);
-				newTreeNum++;
-				if (next1!=null) {
-					prev.next = toInsert;
-					toInsert.next = next1;
-					prev = toInsert;
-					this.last = toInsert;
-					if (this.min.item.key >= toInsert.item.key) {
-						this.min = toInsert;
-					}	
-				}
-				// handle the bad case when this heap was only 1 tree.
-				else {
-					// We think we will get here iff Both heaps have 1 tree with the same rank
-					//assert(cur1==null && cur2==null && carry == null);
-					this.last = toInsert;
-					toInsert.next = toInsert;
-					if (this.min == null || this.min.item.key >= toInsert.item.key) {
-						this.min = toInsert;
-					}
-				}
+			sum[0] = new HeapNode();
+			sum[1] = new HeapNode();
+			sum[2] = new HeapNode();
 			
-			}
-			cur1 = next1;
-			cur2 = next2;
-			sum = new HeapNode[3]; 
+			sum[0].isVirtual = true;
+			sum[1].isVirtual = true;
+			sum[2].isVirtual = true;
+			
+			
 		}
 		
-		this.size = newSize;
-		this.numTrees = newTreeNum;
+		HeapNode firstOf= null;
+		HeapNode lastOf= null;
+		HeapNode minOf= null;
+		HeapNode prev= null;
+		int sizeOf = 0;
+		int numOfTrees = 0;
+		
+		for(int i = 0; i < arraysLength; i++) {
+			if(!meldedHeapArr[i].isVirtual) {
+				numOfTrees++;
+				sizeOf+=Math.pow(2, i);
+				lastOf = meldedHeapArr[i];
+				if(firstOf == null) {
+					firstOf = meldedHeapArr[i];
+				}
+				if(prev != null) {
+					prev.next = meldedHeapArr[i];
+				}
+				prev = meldedHeapArr[i];
+				if(minOf == null || meldedHeapArr[i].item.key < minOf.item.key) {
+					minOf = meldedHeapArr[i];
+				}
+			}
+		}
+		lastOf.next = firstOf;
+		this.min = minOf;
+		this.last = lastOf;
+		this.size = sizeOf;
+		this.numTrees = numOfTrees;
+		
+		
+		
 	}
 	
 
@@ -314,7 +339,7 @@ public class BinomialHeap
 	 */
 	public int numTrees()
 	{
-		return 0; // should be replaced by student code
+		return numTrees;
 	}
 
 	/**
@@ -327,6 +352,7 @@ public class BinomialHeap
 		public HeapNode next;
 		public HeapNode parent;
 		public int rank;
+		public boolean isVirtual = false;
 	}
 
 	/**
