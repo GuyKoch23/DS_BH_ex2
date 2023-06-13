@@ -9,7 +9,7 @@ import org.junit.Assert;
 
 class BinomialHeapTest {
 
-	BinomialHeap bh;
+	BinomialHeap bh0;
 	BinomialHeap bh1;
 	BinomialHeap bh2;
 	BinomialHeap bh3;
@@ -17,7 +17,7 @@ class BinomialHeapTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		bh = new BinomialHeap();
+		bh0 = new BinomialHeap();
 		bh1 = new BinomialHeap();
 		bh2 = new BinomialHeap();
 		bh3 = new BinomialHeap();
@@ -26,33 +26,33 @@ class BinomialHeapTest {
 
 	@Test
 	void empty_bh_0_size() {
-		Assert.assertEquals(0, bh.size());
+		Assert.assertEquals(0, bh0.size());
 	}
 	
 	@Test
 	void empty_bh_empty() {
-		Assert.assertEquals(true, bh.empty());
+		Assert.assertEquals(true, bh0.empty());
 	}
 	
 	@Test
 	void empty_bh_min_is_null() {
-		Assert.assertEquals(null, bh.findMin());
+		Assert.assertEquals(null, bh0.findMin());
 	}
 	
 	@Test
 	void insert_first_to_empty_bh() {
-		bh.insert(1, "Please Word");
-		Assert.assertEquals(1, bh.findMin().key);
-		Assert.assertEquals(1, bh.last.item.key);
-		Assert.assertEquals(1, bh.size);
-		Assert.assertEquals(1, bh.numTrees);
+		bh0.insert(1, "Please Word");
+		Assert.assertEquals(1, bh0.findMin().key);
+		Assert.assertEquals(1, bh0.last.item.key);
+		Assert.assertEquals(1, bh0.size);
+		Assert.assertEquals(1, bh0.numTrees);
 	}
 	
 	@Test
 	void insert_2_to_1_bh() {
-		bh.insert(1, "Please Word");
-		bh.insert(2, "Please Word again");
-		Assert.assertEquals(1, bh.findMin().key);
+		bh0.insert(1, "Please Word");
+		bh0.insert(2, "Please Word again");
+		Assert.assertEquals(1, bh0.findMin().key);
 	}
 	
 	@Test
@@ -87,11 +87,19 @@ class BinomialHeapTest {
 
 		Assert.assertEquals(1, bh3.findMin().key);
 		Assert.assertEquals(1, bh3.last.item.key);
-		//Assert.assertEquals(2, bh1.findMin().node.rank);
+		Assert.assertEquals(2, bh3.findMin().node.rank);
 		Assert.assertEquals(4, bh3.findMin().node.child.item.key);
-		//Assert.assertEquals(0, bh1.findMin().node.child.next.rank);
+		Assert.assertEquals(0, bh3.findMin().node.child.next.rank);
 	}
 	
+	@Test
+	 void meld_two_empty_heaps() {
+		 bh0.meld(bh1);
+		 Assert.assertEquals(0, bh0.size);
+		 Assert.assertEquals(0, bh0.numTrees);
+		 Assert.assertEquals(null, bh0.min);
+		 Assert.assertEquals(null, bh0.last);
+	 }
 	
 	
 	
