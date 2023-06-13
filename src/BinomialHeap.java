@@ -76,20 +76,22 @@ public class BinomialHeap
 		BinomialHeap heap1 = new BinomialHeap();
 		heap1.size = (int) (this.size - Math.pow(2,this.min.rank));
 		heap1.numTrees = this.numTrees - 1;
-		HeapNode newMin = null;
-		HeapNode newLast = null;
-		HeapNode cur = this.min.next;
-		while(cur!=this.min) {
-			if (newMin == null || cur.item.key <= newMin.item.key) {
-				newMin = cur;
+		if (heap1.size !=0) {
+			HeapNode newMin = null;
+			HeapNode newLast = null;
+			HeapNode cur = this.min.next;
+			while(cur!=this.min) {
+				if (newMin == null || cur.item.key <= newMin.item.key) {
+					newMin = cur;
+				}
+				if (newLast == null || cur.rank > newLast.rank) {
+					newLast = cur;
+				}
+				cur = cur.next;
 			}
-			if (newLast == null || cur.rank > newLast.rank) {
-				newLast = cur;
-			}
-			cur = cur.next;
+			heap1.last = newLast;
+			heap1.min = newMin;
 		}
-		heap1.last = newLast;
-		heap1.min = newMin;
 		
 		// will contain the min tree children
 		BinomialHeap heap2 = new BinomialHeap();
