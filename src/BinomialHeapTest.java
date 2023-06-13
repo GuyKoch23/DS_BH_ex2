@@ -14,6 +14,8 @@ class BinomialHeapTest {
 	BinomialHeap bh2;
 	BinomialHeap bh3;
 	BinomialHeap bh4;
+	BinomialHeap bh5;
+	BinomialHeap bh6;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -22,6 +24,8 @@ class BinomialHeapTest {
 		bh2 = new BinomialHeap();
 		bh3 = new BinomialHeap();
 		bh4 = new BinomialHeap();
+		bh5 = new BinomialHeap();
+		bh6 = new BinomialHeap();
 	}
 
 	@Test
@@ -101,14 +105,124 @@ class BinomialHeapTest {
 		 Assert.assertEquals(null, bh0.last);
 	 }
 	
+	@Test
+	 void meld_one_with_two_heaps() {
+		 
+		bh0.insert(1, "hey");
+		bh1.insert(2, "hey");
+		bh1.insert(3, "hey");
+		
+		bh0.meld(bh1);
+		
+		Assert.assertEquals(3, bh0.size);
+		Assert.assertEquals(2, bh0.numTrees);
+		Assert.assertEquals(1, bh0.min.item.key);
+		Assert.assertEquals(2, bh0.last.item.key);
+	 }
+	
+	@Test
+	 void meld_two_with_one_heaps() {
+		 
+		bh0.insert(1, "hey");
+		bh1.insert(2, "hey");
+		bh1.insert(3, "hey");
+		
+		bh0.meld(bh1);
+		
+		Assert.assertEquals(3, bh0.size);
+		Assert.assertEquals(2, bh0.numTrees);
+		Assert.assertEquals(1, bh0.min.item.key);
+		Assert.assertEquals(2, bh0.last.item.key);
+	 }
+	
+	@Test
+	 void meld_two_with_one_heaps2() {
+		 
+		bh0.insert(6, "hey");
+		bh1.insert(3, "hey");
+		bh1.insert(1, "hey");
+		
+		bh0.meld(bh1);
+		
+		Assert.assertEquals(3, bh0.size);
+		Assert.assertEquals(2, bh0.numTrees);
+		Assert.assertEquals(1, bh0.min.item.key);
+		Assert.assertEquals(1, bh0.last.item.key);
+	 }
 	
 	
-	
-	
-	
-	
-	
-	
+	@Test
+	 void meld_two_with_one_heaps3() {
+		 
+		bh0.insert(6, "hey");
+		bh1.insert(6, "hey");
+		bh1.insert(1, "hey");
+		
+		bh0.meld(bh1);
+		
+		Assert.assertEquals(3, bh0.size);
+		Assert.assertEquals(2, bh0.numTrees);
+		Assert.assertEquals(1, bh0.min.item.key);
+		Assert.assertEquals(1, bh0.last.item.key);
+		Assert.assertEquals(6, bh0.last.next.item.key);
+		Assert.assertEquals(0, bh0.last.next.rank);
+		Assert.assertEquals(1, bh0.last.rank);
+		Assert.assertEquals(0, bh0.last.child.rank);
+		Assert.assertEquals(6, bh0.last.child.item.key);
+	 }
 
+	@Test
+	 void meld_two_with_one_heaps4() {
+		 
+		bh0.insert(1, "hey");
+		bh1.insert(1, "hey");
+		bh1.insert(1, "hey");
+		
+		bh0.meld(bh1);
+		
+		Assert.assertEquals(3, bh0.size);
+		Assert.assertEquals(2, bh0.numTrees);
+		Assert.assertEquals(1, bh0.min.item.key);
+		Assert.assertEquals(1, bh0.last.item.key);
+		Assert.assertEquals(1, bh0.last.next.item.key);
+		Assert.assertEquals(0, bh0.last.next.rank);
+
+	 }
+	
+	
+	@Test
+	 void meld_8_with_6_heaps() {
+		 
+		bh5.insert(8, "hey");
+		bh5.insert(4, "hey");
+		bh5.insert(5, "hey");
+		
+		bh6.insert(7, "hey");
+		bh6.insert(9, "hey");
+		bh6.insert(1, "hey");
+		bh6.insert(2, "hey");
+		bh6.insert(3, "hey");
+		bh6.insert(6, "hey");
+		
+		bh5.meld(bh6);
+		
+		Assert.assertEquals(9, bh5.size);
+		Assert.assertEquals(2, bh5.numTrees);
+		Assert.assertEquals(1, bh5.min.item.key);
+		Assert.assertEquals(5, bh5.last.next.item.key);
+		Assert.assertEquals(3, bh5.last.rank);
+		Assert.assertEquals(0, bh5.last.next.rank);
+		Assert.assertEquals(2, bh5.last.child.rank);
+		Assert.assertEquals(3, bh5.last.child.item.key);
+	 }
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

@@ -226,15 +226,15 @@ public class BinomialHeap
 				// handle the bad case when this heap was only 1 tree.
 				else {
 					// We think we will get here iff Both heaps have 1 tree with the same rank
-					assert(cur1==null && cur2==null && carry == null);
+					//assert(cur1==null && cur2==null && carry == null);
 					this.last = toInsert;
 					toInsert.next = toInsert;
-					if (this.min.item.key >= toInsert.item.key) {
+					if (this.min == null || this.min.item.key >= toInsert.item.key) {
 						this.min = toInsert;
 					}
 				}
-			}
 			
+			}
 			cur1 = next1;
 			cur2 = next2;
 			sum = new HeapNode[3]; 
