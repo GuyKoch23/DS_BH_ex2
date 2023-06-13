@@ -216,8 +216,14 @@ class BinomialHeapTest {
 		Assert.assertEquals(3, bh5.last.child.item.key);
 	 }
 	
-	
-	
+	@Test
+	void delete_min_from231() {
+		bh1.insert(2, "Please Word");
+		bh1.insert(3, "Please Word again");
+		bh1.insert(1, "Please Word again");
+		bh1.deleteMin();
+		Assert.assertEquals(2, bh1.findMin().key);
+	}
 	
 	
 	

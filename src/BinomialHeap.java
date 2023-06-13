@@ -71,7 +71,45 @@ public class BinomialHeap
 	 */
 	public void deleteMin()
 	{
-		return; // should be replaced by student code
+		
+		// will contain this heap without the min tree
+		BinomialHeap heap1 = new BinomialHeap();
+		heap1.size = (int) (this.size - Math.pow(2,this.min.rank));
+		heap1.numTrees = this.numTrees - 1;
+		HeapNode newMin = null;
+		HeapNode newLast = null;
+		HeapNode cur = this.min.next;
+		while(cur!=this.min) {
+			if (newMin == null || cur.item.key <= newMin.item.key) {
+				newMin = cur;
+			}
+			if (newLast == null || cur.rank > newLast.rank) {
+				newLast = cur;
+			}
+			cur = cur.next;
+		}
+		heap1.last = newLast;
+		heap1.min = newMin;
+		
+		// will contain the min tree children
+		BinomialHeap heap2 = new BinomialHeap();
+		heap2.size = (int) (Math.pow(2, this.min.rank) - 1);
+		heap2.numTrees = this.min.rank;
+		if (heap2.size != 0) {
+			heap2.last = this.min.child;
+			HeapNode newMin2 = heap2.last;
+			HeapNode cur2 = heap2.last.next;
+			while(cur2!=heap2.last) {
+				if (cur2.item.key < newMin2.item.key) {
+					newMin2 = cur2;
+				}
+				cur2 = cur2.next;
+			}
+		}
+		
+		heap1.meld(heap2);
+		this.switchHeaps(heap1);
+		
 
 	}
 
