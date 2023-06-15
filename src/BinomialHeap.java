@@ -138,14 +138,26 @@ public class BinomialHeap
 	public void decreaseKey(HeapItem item, int diff) 
 	{    
 		item.key -= diff;
-		if(item.node.parent == null) {
+		// if new item key is the new min it will become its tree root.
+		if(item.key < this.min.item.key) {
+			this.min = item.node;
+		}
+		// item is already root so no need to go up for fixes
+		if(item.node.parent == null) {	
 			return;
 		}
-		int temp;
+		int tempkey;
+		String tempinfo;
 		while(item.node.parent != null && item.node.parent.item.key > item.key) {
-			temp = item.key;
+			// replace item with its parent
+			tempkey = item.key;
 			item.key = item.node.parent.item.key;
-			item.node.parent.item.key = temp;
+			item.node.parent.item.key = tempkey;
+			tempinfo = item.info;
+			item.info = item.node.parent.item.info;
+			item.node.parent.item.info = tempinfo;
+			// move item pointer up
+			item = item.node.parent.item;
 		}
 	}
 
