@@ -272,20 +272,6 @@ class BinomialHeapTest {
 		Assert.assertEquals(21, bh5.last.child.item.key);
 	 }
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Test
 	void delete_min_from231() {
 		bh1.insert(2, "Please Word");
@@ -294,6 +280,24 @@ class BinomialHeapTest {
 		bh1.deleteMin();
 		Assert.assertEquals(2, bh1.findMin().key);
 	}
+	
+	
+	
+	@Test
+	void delete_min_from2() {
+		bh1.insert(6, "Please Word");
+		bh1.insert(9, "Please Word again");
+		bh1.insert(10, "Please Word again");
+		bh1.insert(12, "Please Word");
+		bh1.insert(2, "Please Word again");
+		bh1.insert(3, "Please Word again");
+		bh1.insert(4, "Please Word");
+		bh1.insert(5, "Please Word again");
+		Assert.assertEquals(2, bh1.findMin().key);
+		bh1.deleteMin();
+		Assert.assertEquals(3, bh1.findMin().key);
+	}
+	
 	
 	
 	

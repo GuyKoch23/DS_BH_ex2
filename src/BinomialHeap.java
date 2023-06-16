@@ -107,6 +107,7 @@ public class BinomialHeap
 				}
 				cur2 = cur2.next;
 			}
+			heap2.min = newMin2;
 		}
 		
 		heap1.meld(heap2);
@@ -402,14 +403,16 @@ public class BinomialHeap
 			}
 		}
 		if(tree1.item.key < tree2.item.key) {
-			tree2.next = tree1.child.next;
+			tree1.child.next = tree2;
+			tree2.next = tree1.child;
 			tree1.child = tree2;
 			tree2.parent = tree1;
 			tree1.rank++;
 			return tree1;
 		}
 		else {
-			tree1.next = tree2.child.next;
+			tree2.child.next = tree1;
+			tree1.next = tree2.child;
 			tree2.child = tree1;
 			tree1.parent = tree2;
 			tree2.rank++;
