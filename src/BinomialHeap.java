@@ -411,13 +411,25 @@ public class BinomialHeap
 			return tree1;
 		}
 		else {
-			tree2.child.next = tree1;
+			FindMinRank(tree2.child).next = tree1;
 			tree1.next = tree2.child;
 			tree2.child = tree1;
 			tree1.parent = tree2;
 			tree2.rank++;
 			return tree2;
 		}
+	}
+	
+	public static HeapNode FindMinRank(HeapNode startPoint) {
+		HeapNode cur = startPoint.next;
+		HeapNode curMinRank = startPoint;
+		while(cur!=startPoint) {
+			if(cur.rank < curMinRank.rank) {
+				curMinRank = cur;
+			}
+			cur = cur.next;
+		}
+		return curMinRank;
 	}
 	
 	
