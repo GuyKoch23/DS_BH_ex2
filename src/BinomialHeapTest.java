@@ -298,7 +298,12 @@ class BinomialHeapTest {
 		Assert.assertEquals(3, bh1.findMin().key);
 	}
 	
-	
+	@Test
+	void Run() {
+		for(int i = 1; i<= 5; i++) {
+			mast.Exp2(Math.pow(3, i+5)-1);
+		}
+	}
 	
 	
 	

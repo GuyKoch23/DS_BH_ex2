@@ -11,6 +11,9 @@ public class BinomialHeap
 	public HeapNode min;
 	public int numTrees;
 	
+	public int links = 0;
+	public int deletedMinRank = 0;
+	
 	private void switchHeaps(BinomialHeap heap2)
 	{
 		int temp = this.size;
@@ -71,7 +74,7 @@ public class BinomialHeap
 	 */
 	public void deleteMin()
 	{
-		
+		deletedMinRank += min.rank;
 		// will contain this heap without the min tree
 		BinomialHeap heap1 = new BinomialHeap();
 		heap1.size = (int) (this.size - Math.pow(2,this.min.rank));
@@ -80,17 +83,58 @@ public class BinomialHeap
 			HeapNode newMin = null;
 			HeapNode newLast = null;
 			HeapNode cur = this.min.next;
-			while(cur!=this.min) {
-				if (newMin == null || cur.item.key <= newMin.item.key) {
-					newMin = cur;
+			HeapNode [] arr = new HeapNode[this.last.rank+1];
+			
+			HeapNode cur2 = this.last.next;
+			for(int i = 0; i < arr.length; i++) {
+				if(cur2 != this.min) {
+					if(cur2.rank == i) {
+						arr[i] = cur2;
+						cur2 = cur2.next;
+					}
+					else {
+						arr[i] = new HeapNode();
+						arr[i].isVirtual = true;
+					}
 				}
-				if (newLast == null || cur.rank > newLast.rank) {
-					newLast = cur;
+				else {
+					arr[i] = new HeapNode();
+					arr[i].isVirtual = true;
+					cur2 = cur2.next;
 				}
-				cur = cur.next;
+
 			}
-			heap1.last = newLast;
-			heap1.min = newMin;
+			
+			HeapNode firstOf= null;
+			HeapNode lastOf= null;
+			HeapNode minOf= null;
+			HeapNode prev= null;
+			int sizeOf = 0;
+			int numOfTrees = 0;
+			
+			for(int i = 0; i < arr.length; i++) {
+				if(!arr[i].isVirtual) {
+					numOfTrees++;
+					sizeOf+=Math.pow(2, i);
+					lastOf = arr[i];
+					if(firstOf == null) {
+						firstOf = arr[i];
+					}
+					if(prev != null) {
+						prev.next = arr[i];
+					}
+					prev = arr[i];
+					if(minOf == null || arr[i].item.key < minOf.item.key) {
+						minOf = arr[i];
+					}
+				}
+			}
+			lastOf.next = firstOf;
+			heap1.min = minOf;
+			heap1.last = lastOf;
+			heap1.size = sizeOf;
+			heap1.numTrees = numOfTrees;
+			
 		}
 		
 		// will contain the min tree children
@@ -271,6 +315,7 @@ public class BinomialHeap
 			}
 			if(!sum[1].isVirtual) {
 				carry = Link(sum[0],sum[1]);
+				links++;
 			}
 			else {
 				toInsert = sum[0];
@@ -388,6 +433,7 @@ public class BinomialHeap
 	 * @return
 	 */
 	public static HeapNode Link(HeapNode tree1, HeapNode tree2) {
+				
 		if(tree1.rank == 0) {// also tree2.rank == 0
 			if(tree1.item.key < tree2.item.key) {
 				tree1.child = tree2;
