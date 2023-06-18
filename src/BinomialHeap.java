@@ -438,21 +438,27 @@ public class BinomialHeap
 			if(tree1.item.key < tree2.item.key) {
 				tree1.child = tree2;
 				tree2.parent = tree1;
+				tree2.next = tree2;
+				tree1.next = tree1;
 				tree1.rank++;
 				return tree1;
 			}
 			else {
 				tree2.child = tree1;
 				tree1.parent = tree2;
+				tree1.next = tree1;
+				tree2.next = tree2;
 				tree2.rank++;
 				return tree2;
 			}
 		}
+		// Tree 1 will be on top
 		if(tree1.item.key < tree2.item.key) {
 			tree2.next = tree1.child.next;
 			tree1.child.next = tree2;
 			tree1.child = tree2;
 			tree2.parent = tree1;
+			tree1.next = tree1.next;
 			tree1.rank++;
 			return tree1;
 		}
@@ -461,6 +467,7 @@ public class BinomialHeap
 			tree2.child.next = tree1;
 			tree2.child = tree1;
 			tree1.parent = tree2;
+			tree2.next = tree2.next;
 			tree2.rank++;
 			return tree2;
 		}

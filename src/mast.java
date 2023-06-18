@@ -27,24 +27,26 @@ public class mast {
 	}
 	
 	
-	public static void Exp2(double n) {
+	public static void Exp2(int n) {
 		System.out.println("");
 		System.out.println("n: "+ n);
 		long x = System.currentTimeMillis();
 
 		
-		ArrayList<Double> arr = new ArrayList<Double>();
-		for(double i = 1; i <= n; i++) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		for(int i = 1; i <= n; i++) {
 			arr.add(i);
 		}
+		//Collections.reverse(arr);
 		Collections.shuffle(arr);
 		
 		BinomialHeap bh2 = new BinomialHeap();
-		for(double item : arr) {
-			bh2.insert((int)item, "hey");
+		for(int item : arr) {
+			bh2.insert(item, "hey");
 		}
 		
-		for(int i = 0; i < n/2 ; i++) {
+		for(int i = 1; i <= n/2 ; i++) {
+			assert(bh2.findMin().key==i);
 			bh2.deleteMin();
 		}
 		
@@ -58,6 +60,41 @@ public class mast {
 		
 	}
 	
+	public static void Exp_roey(int n) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		for(int i = 1; i <= n; i++) {
+			arr.add(i);
+		}
+		Collections.shuffle(arr);
+		
+		BinomialHeap bh2 = new BinomialHeap();
+		for(int item : arr) {
+			bh2.insert(item, "hey");
+		}
+		
+		for(int i = 1; i <= n/2; i++) {
+			assert(bh2.findMin().key==i);
+			bh2.deleteMin();
+		}
+		
+		ArrayList<Integer> arr2 = new ArrayList<Integer>();
+		for(int i = 1; i <= n/2; i++) {
+			arr2.add(i);
+		}
+		for(int i = n+1; i <= n*3/2; i++) {
+			arr2.add(i);
+		}
+		Collections.shuffle(arr2);
+		for(int item : arr2) {
+			bh2.insert(item, "hey");
+		}
+		
+		for(int i = 1; i <= n*3/2; i++) {
+			assert(bh2.findMin().key==i);
+			bh2.deleteMin();
+		}
+		
+	}
 	
 	
 	

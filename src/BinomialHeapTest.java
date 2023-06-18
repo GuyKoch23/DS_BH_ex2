@@ -301,10 +301,17 @@ class BinomialHeapTest {
 	@Test
 	void Run() {
 		for(int i = 1; i<= 5; i++) {
-			mast.Exp2(Math.pow(3, i+5)-1);
+			mast.Exp2((int)Math.round(Math.pow(3, i+5)) -1);
 		}
 	}
 	
+	@Test
+	void test_roey() {
+		for(int i = 5; i<= 100; i++) {
+			System.out.println(i);
+			mast.Exp_roey(i);
+		}
+	}
 	
 	
 	
