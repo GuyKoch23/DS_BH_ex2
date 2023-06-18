@@ -403,16 +403,16 @@ public class BinomialHeap
 			}
 		}
 		if(tree1.item.key < tree2.item.key) {
+			tree2.next = tree1.child.next;
 			tree1.child.next = tree2;
-			tree2.next = tree1.child;
 			tree1.child = tree2;
 			tree2.parent = tree1;
 			tree1.rank++;
 			return tree1;
 		}
 		else {
-			FindMinRank(tree2.child).next = tree1;
-			tree1.next = tree2.child;
+			tree1.next = tree2.child.next;
+			tree2.child.next = tree1;
 			tree2.child = tree1;
 			tree1.parent = tree2;
 			tree2.rank++;
@@ -420,17 +420,7 @@ public class BinomialHeap
 		}
 	}
 	
-	public static HeapNode FindMinRank(HeapNode startPoint) {
-		HeapNode cur = startPoint.next;
-		HeapNode curMinRank = startPoint;
-		while(cur!=startPoint) {
-			if(cur.rank < curMinRank.rank) {
-				curMinRank = cur;
-			}
-			cur = cur.next;
-		}
-		return curMinRank;
-	}
+	
 	
 	
 	
