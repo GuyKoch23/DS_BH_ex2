@@ -43,7 +43,6 @@ public class BinomialHeap
 	public HeapItem insert(int key, String info) 
 	{    
 
-		BinomialHeap bh = new BinomialHeap();
 		HeapNode hn = new HeapNode();
 		HeapItem hi = new HeapItem();
 		
@@ -57,12 +56,36 @@ public class BinomialHeap
 		hi.info = info;
 		hi.node = hn;
 		
-		bh.min = hn;
-		bh.last = hn;
-		bh.numTrees = 1;
-		bh.size = 1;
+		if(this.last == null) {
+			this.last = hn;
+			this.min = hn;
+			this.size++;
+			this.numTrees++;
+			return hi;	
+		}
 		
-		this.meld(bh);
+		if(this.last.next.rank != 0) {
+			HeapNode first = this.last.next;
+			this.last.next = hn;
+			hn.next = first;
+			if(hi.key < this.min.item.key) {
+				this.min = hn;
+			}
+			this.numTrees++;
+			this.size++;
+		}
+		
+		else {
+			BinomialHeap bh = new BinomialHeap();
+
+			bh.min = hn;
+			bh.last = hn;
+			bh.numTrees = 1;
+			bh.size = 1;
+			
+			this.meld(bh);
+		}
+
 		
 		return hi;
 		
