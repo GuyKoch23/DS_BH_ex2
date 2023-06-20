@@ -30,7 +30,6 @@ public class mast {
 	public static void Exp2(int n) {
 		System.out.println("");
 		System.out.println("n: "+ n);
-		long x = System.currentTimeMillis();
 
 		
 		ArrayList<Integer> arr = new ArrayList<Integer>();
@@ -39,6 +38,9 @@ public class mast {
 		}
 		//Collections.reverse(arr);
 		Collections.shuffle(arr);
+		
+		long x = System.currentTimeMillis();
+
 		
 		BinomialHeap bh2 = new BinomialHeap();
 		for(int item : arr) {
@@ -56,9 +58,82 @@ public class mast {
 		System.out.println("Links "+ bh2.links);
 		System.out.println("NumTrees " + bh2.numTrees);
 		System.out.println("Time "+(y-x));
+		System.out.println("Ranks "+bh2.deletedMinRank);
 		
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void Exp3(int n) {
+		System.out.println("");
+		System.out.println("n: "+ n);
+
+		
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		for(int i = n; i >=1 ; i--) {
+			arr.add(i);
+		}
+		//Collections.reverse(arr);
+		//Collections.shuffle(arr);
+		
+		long x = System.currentTimeMillis();
+
+		
+		BinomialHeap bh2 = new BinomialHeap();
+		for(int item : arr) {
+			bh2.insert(item, "hey");
+		}
+		
+		while(bh2.size > 31) {
+			bh2.deleteMin();
+		}
+		
+		
+		long y = System.currentTimeMillis();
+
+		System.out.println("Links "+ bh2.links);
+		System.out.println("NumTrees " + bh2.numTrees);
+		System.out.println("Time "+(y-x));
+		System.out.println("Ranks "+bh2.deletedMinRank);
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static void Exp_roey(int n) {
 		ArrayList<Integer> arr = new ArrayList<Integer>();

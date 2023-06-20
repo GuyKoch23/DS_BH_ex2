@@ -156,6 +156,7 @@ public class BinomialHeap
 		
 		heap1.meld(heap2);
 		this.switchHeaps(heap1);
+		this.links += heap1.links;
 		
 
 	}
@@ -195,14 +196,20 @@ public class BinomialHeap
 		String tempinfo;
 		while(item.node.parent != null && item.node.parent.item.key > item.key) {
 			// replace item with its parent
-			tempkey = item.key;
-			item.key = item.node.parent.item.key;
-			item.node.parent.item.key = tempkey;
-			tempinfo = item.info;
-			item.info = item.node.parent.item.info;
-			item.node.parent.item.info = tempinfo;
+			//tempkey = item.key;
+			//item.key = item.node.parent.item.key;
+			//item.node.parent.item.key = tempkey;
+			//tempinfo = item.info;
+			//item.info = item.node.parent.item.info;
+			//item.node.parent.item.info = tempinfo;
 			// move item pointer up
-			item = item.node.parent.item;
+			//item = item.node.parent.item;
+			HeapNode hn1 = item.node;
+			HeapNode hn2 = item.node.parent;
+			HeapItem temp = hn1.item;
+			hn1.item = hn2.item;
+			hn2.item = temp;
+			
 		}
 	}
 
