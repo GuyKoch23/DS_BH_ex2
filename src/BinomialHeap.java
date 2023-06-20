@@ -42,6 +42,7 @@ public class BinomialHeap
 	 */
 	public HeapItem insert(int key, String info) 
 	{    
+
 		BinomialHeap bh = new BinomialHeap();
 		HeapNode hn = new HeapNode();
 		HeapItem hi = new HeapItem();
@@ -195,22 +196,19 @@ public class BinomialHeap
 		int tempkey;
 		String tempinfo;
 		while(item.node.parent != null && item.node.parent.item.key > item.key) {
-			// replace item with its parent
-			//tempkey = item.key;
-			//item.key = item.node.parent.item.key;
-			//item.node.parent.item.key = tempkey;
-			//tempinfo = item.info;
-			//item.info = item.node.parent.item.info;
-			//item.node.parent.item.info = tempinfo;
-			// move item pointer up
-			//item = item.node.parent.item;
 			HeapNode hn1 = item.node;
 			HeapNode hn2 = item.node.parent;
-			HeapItem temp = hn1.item;
-			hn1.item = hn2.item;
-			hn2.item = temp;
 			
+			HeapItem tempItem = item;
+			
+			hn1.item = hn2.item;
+			hn2.item = tempItem;
+			item.node = hn2;
+			hn1.item.node = hn1;
+			
+			this.min = hn2;
 		}
+
 	}
 
 	/**
