@@ -1,4 +1,7 @@
 /**
+ * Hila Barkan 208239152
+ * Guy Koch 318962909
+ * 
  * BinomialHeap
  *
  * An implementation of binomial heap over non-negative integers.
@@ -343,6 +346,7 @@ public class BinomialHeap
 			}
 			if(!sum[1].isVirtual) {
 				carry = Link(sum[0],sum[1]);
+				System.out.println(sum[0].rank + " " + sum[1].rank);
 				links++;
 			}
 			else {
